@@ -10,3 +10,5 @@ I am interested in nutritionally complete meal products such as Soylent and Huel
 * Provide more detailed output to the user about the nutritional composition of the generated recipe
 * Right now it is possible for the algorithm to choose a negative amount of an ingredient in some edge cases. I need to constrain the solutions to be non-negative
 * Create a UI
+
+5/7/2021: I have replaced numpy.lstsq with scipy.nnls so that only non-negative solutions will be used. I also added script to display the nutrition facts of the generated recipe.
