@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.optimize import nnls
 
 nutrients = ["fat", "sodium", "carbs", "protein", "fiber", "vitD",
              "calcium", "iron", "potassium", "vitaminA", "vitaminC", "vitaminE",
@@ -19,7 +20,7 @@ def inputIngredient(ingredients, index):
     ingredient["name"] = input("Enter the name of the ingredient\n")
     ingredient["unit"] = input("Enter the name of the units\n")
     ingredient["serving"] = float(input("Enter the serving size\n"))
-    #Calorie input is divided by 10 to give it balanced weighting with the other parameters
+    #Calorie input is divided by 10 to give it more balanced weighting with the other parameters
     ingredient["calories"] = (float(input("Enter the number of calories\n"))/10)
 
     for nutrient in nutrients:
@@ -61,7 +62,7 @@ nutrientMatrix = np.array(values, dtype = 'float')
 
 #find the least squares solution. ".T" creates the transpose of our nutrientMatrix,
 #which makes rows=nutrient and columns=ingredient
-solution, residuals, rank, s = np.linalg.lstsq(nutrientMatrix.T, targets, rcond = None)
+solution, residual = nnls(nutrientMatrix.T, targets)
 
 #TODO: Find how to constrain all solutions to be non-negative
 
@@ -73,5 +74,21 @@ for i in range(0, len(solution)):
         print("\n" + str((solution[i]*ingredientList[i]["serving"])) + " " +
               str(ingredientList[i]["unit"]) + " of " + str(ingredientList[i]["name"]))
 
-print("Residuals (smaller number is closer to target nutrition): ")
-print(residuals)
+#populate a list of nutrition facts for the recipe by summing the
+#nutrition facts of each ingredient multiplied by its quantity
+recipeNutritionFacts = []
+for i in range(0,32):
+    sum = 0
+    for j in range (0, len(values)):
+        sum += (values[j][i] * solution[j])
+    recipeNutritionFacts.append(sum)
+    
+
+print("Residual (smaller number is closer to target nutrition): ")
+print(residual)
+
+print("\nNutrition Facts:")
+print("\nCalories: " + str(recipeNutritionFacts[0]*10))
+for i in range(1, 32):
+    print("\n" + nutrients[i-1] + ": " + str(recipeNutritionFacts[i]) + " %DV")
+
