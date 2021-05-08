@@ -12,3 +12,5 @@ I am interested in nutritionally complete meal products such as Soylent and Huel
 * Create a UI
 
 5/7/2021: I have replaced numpy.lstsq with scipy.nnls so that only non-negative solutions will be used. I also added script to display the nutrition facts of the generated recipe.
+
+5/7/2021: It now reads the ingredient data from ingredients.csv. This is less cumbersome but still involves a lot of data entry. I am considering using the USDA food database to let users lookup nutrition facts, or starting another project for automatic reading of nutrition labels
